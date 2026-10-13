@@ -1,0 +1,6 @@
+{
+  "name": "Apk Soqchi",
+  "description": "Real vaqtda APK o'rnatilishini nazorat qiluvchi, virus va xavfli ruxsatlarni aniqlovchi xavfsizlik qalqoni",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

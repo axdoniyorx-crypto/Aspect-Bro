@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Apk Soqchi</string>
+    <string name="tagline">APK O\'rnatish Qalqoni va Malware Skaneri</string>
+    <string name="protection_active">Himoya faol</string>
+    <string name="protection_disabled">Himoya o\'chirilgan</string>
+    <string name="accessibility_service_description">Apk Soqchi yangi ilovalar va APK lar o\'rnatilishini real vaqtda kuzatib, virus va xavfli ruxsatlarga ega APK larni avtomatik tarzda bekor qilish va bloklash uchun ushbu xizmatdan foydalanadi.</string>
+</resources>
