@@ -58,10 +58,11 @@ class ApkAnalyzer(private val context: Context) {
         }
 
         val appName = try {
-            if (packageInfo?.applicationInfo != null) {
-                packageInfo.applicationInfo.sourceDir = file.absolutePath
-                packageInfo.applicationInfo.publicSourceDir = file.absolutePath
-                packageManager.getApplicationLabel(packageInfo.applicationInfo).toString()
+            val appInfo = packageInfo?.applicationInfo
+            if (appInfo != null) {
+                appInfo.sourceDir = file.absolutePath
+                appInfo.publicSourceDir = file.absolutePath
+                packageManager.getApplicationLabel(appInfo).toString()
             } else {
                 file.nameWithoutExtension
             }
@@ -93,22 +94,32 @@ class ApkAnalyzer(private val context: Context) {
         val pm = context.packageManager
         val appInfo = packageInfo.applicationInfo
         val appName = try {
-            pm.getApplicationLabel(appInfo).toString()
+            if (appInfo != null) {
+                pm.getApplicationLabel(appInfo).toString()
+            } else {
+                packageInfo.packageName ?: "Unknown"
+            }
         } catch (e: Exception) {
-            packageInfo.packageName
+            packageInfo.packageName ?: "Unknown"
         }
 
-        val isSystem = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-        val apkFile = File(appInfo.sourceDir)
-        val fileSize = if (apkFile.exists()) apkFile.length() else 0L
-        val sha256 = if (apkFile.exists()) calculateSha256(apkFile) else "N/A"
+        val isSystem = if (appInfo != null) {
+            (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+        } else {
+            false
+        }
+
+        val sourceDir = appInfo?.sourceDir
+        val apkFile = sourceDir?.let { File(it) }
+        val fileSize = if (apkFile != null && apkFile.exists()) apkFile.length() else 0L
+        val sha256 = if (apkFile != null && apkFile.exists()) calculateSha256(apkFile) else "N/A"
         val permissions = packageInfo.requestedPermissions?.toList() ?: emptyList()
 
         return evaluateThreat(
             appName = appName,
-            packageName = packageInfo.packageName,
+            packageName = packageInfo.packageName ?: "unknown.package",
             versionName = packageInfo.versionName ?: "1.0",
-            filePath = appInfo.sourceDir,
+            filePath = sourceDir,
             fileSize = fileSize,
             sha256 = sha256,
             permissions = permissions,
